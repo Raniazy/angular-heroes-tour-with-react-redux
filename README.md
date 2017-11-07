@@ -522,3 +522,16 @@ describe('App component', () => {
   });
 });
 ```
+
+### Results
+The final results til now are the next visuals :
+Dashboard : 
+
+<p align="center">
+<img src="img/res1.jpg">
+</p>
+
+List of Heroes :
+<p align="center">
+<img src="img/res2.jpg">
+</p>
