@@ -1,0 +1,12 @@
+.idea
+.git
+.DS_Store
+node_modules
+.tmp/*
+yarn.lock
+.yarnclean
+public
+*.iml
+*.log
+npm-debug.log*
+*.iml

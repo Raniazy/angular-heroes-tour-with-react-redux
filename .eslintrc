@@ -1,0 +1,29 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "mocha": true
+  },
+
+  "globals": {
+    "React": true
+  },
+
+  "plugins": [
+    "react"
+  ],
+
+  //"extends": "airbnb",
+
+  "rules": {
+    "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }],
+    "arrow-body-style" : 1
+  },
+
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  }
+}
