@@ -524,14 +524,33 @@ describe('App component', () => {
 ```
 
 ### Results
-The final results til now are the next visuals :
+The final results til now are the next visuals.
+
 Dashboard : 
 
 <p align="center">
-<img src="img/res1.jpg">
+<img src="img/res1.png">
 </p>
 
 List of Heroes :
+
 <p align="center">
-<img src="img/res2.jpg">
+<img src="img/res2.png">
 </p>
+
+### Next Step CONTRIBUTION
+I count on you to help me complete the tutorial. 
+- Display Hero's details 
+![alt text](https://angular.io/generated/images/guide/toh/hero-details-1.png)
+
+- delete a hero from the list
+![alt text](http://geoff-fox.com/wp-content/uploads/2017/02/delete_a_hero.png)
+
+- TEST the rest !
+
+Thank you for following this tutorial.
+
+# Contribution
+
+Feel free to contribute and share 😊
+With 💗
