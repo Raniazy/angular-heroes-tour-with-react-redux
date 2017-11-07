@@ -8,15 +8,13 @@ function displayHero(hero) {
   return <HeroDetails hero={hero} />;
 }
 
-function Heroes({ heroes }) {
+export default function Heroes({ heroes }) {
   return (
     <div className={HeroesClass.container}>
       {heroes.map(displayHero)}
     </div>
   );
 }
-
-export default Heroes;
 
 HeroDetails.propTypes = {
   heroes: Proptypes.arrayOf().isRequired,

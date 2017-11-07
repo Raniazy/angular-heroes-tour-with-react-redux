@@ -392,3 +392,133 @@ Congrats !! You've just finished your first view using React and Redux. Actually
 
 ![alt text](http://www.theodo.fr/uploads/blog//2016/03/ui_workflow.png)
 
+We'll do the same for the other view: 
+
+-AllHeroes :
+This component displays all the heroes (name and id) and subscribes Heroes component to Store.
+
+```
+function AllHeroes() {
+  return (
+    <div>
+      <Input />
+      <HeroesContainer />
+    </div>
+  );
+}
+```
+
+- Heroes
+This component has access to the heroes list in the store. This was done via the HeroesContainer : 
+
+```
+Containers/HeroesContainer.js
+function mapStateToProps(currentState) {
+  return {
+    heroes: currentState.heroes,
+  };
+}
+export default connect(mapStateToProps)(Heroes);
+
+//Heroes/Heroes.js
+function displayHero(hero) {
+  return <HeroDetails hero={hero} />;
+}
+
+export default function Heroes({ heroes }) {
+  return (
+    <div className={HeroesClass.container}>
+      {heroes.map(displayHero)}
+    </div>
+  );
+}
+```
+- HeroDetails :
+
+It displays each element of the list : 
+
+```
+export default function HeroDetails({ hero }) {
+  return (
+    <div className={HeroClass.heroesli}>
+      <span className={HeroClass.badge}>{hero.id}</span>
+      <span>{hero.name}</span>
+    </div>
+  );
+}
+```
+- Input :
+The input also subscribes to the store, because it updates the heroes list. 
+You can add a hero to the current list. 
+
+```
+function mapStateToProps(currentState) {
+  return {
+    heroes: currentState.heroes,
+  };
+}
+
+class Input extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.actionToTaKe = this.actionToTaKe.bind(this);
+  }
+
+  actionToTaKe(event) {
+    if (event.key === 'Enter') {
+      this.props.dispatch(addHero({ name: event.target.value }, this.props.heroes));
+      event.target.value = '';
+    }
+  }
+
+  render() {
+    return (
+      <div className={InputClass.container} style={{ marginRight: `${3}em` }}> Hero name
+        <input className={InputClass.input} type="text" onKeyPress={this.actionToTaKe} />
+      </div>
+    );
+  }
+}
+
+export default connect(mapStateToProps)(Input);
+```
+
+The input dispaches an action to notify the store about the changes. 
+In this case the action is a function 'addHero' that takes a hero and the list of heroes in parameters.
+
+This action is : 
+
+```
+export function addHero(hero, heroes) {
+  const lastId = heroes.length;
+  const newHeroes = Object.assign({}, {
+    heroes: [
+      ...heroes,
+      {
+        id: lastId + 1,
+        name: hero.name,
+      },
+    ] });
+  return (dispatch) => {
+    dispatch(updateHeroesAction(newHeroes.heroes));
+  };
+}
+```
+You can notice that at the end, the action returns a dispatch of 'updateHeroesAction' which notifies all the components using the heroes list.
+
+5. Test your components 
+As mentioned earlier, tests will be written in <component_name>.spec.js
+
+Here's an example of a test : 
+- App.spec.js : In fact we're just making sure that out App contains on NavigationBar. Because, we are sure that all other components are testes in React (Route ...)
+```
+chai.use(chaiEnzyme());
+
+describe('App component', () => {
+  it('should have one Navigation bar', () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper.find(NavigationBar)).to.have.length(1);
+  });
+});
+```
