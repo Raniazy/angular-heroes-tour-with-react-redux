@@ -207,7 +207,21 @@ if (module.hot) {
 ```
 
 This is an ordinary entry point with React. But since we will use Redux, let's get started from here.
+#### Redux 
+Redux is a predictable state container for JavaScript apps.
 
+It helps you write applications that behave consistently, run in different environments (client, server, and native), and are easy to test. 
+On top of that, it provides a great developer experience, such as live code editing combined with a time traveling debugger.
+
+You can use Redux together with React, or with any other view library.
+
+To install Redux : 
+```
+npm install --save redux
+npm install --save react-redux
+npm install --save-dev redux-devtools
+```
+You don't need to install this, you already have these in your dependencies. 
 The file remains : 
 
 ```
@@ -238,18 +252,143 @@ if (module.hot) {
 }
 ```
 
-#### Redux 
-Redux is a predictable state container for JavaScript apps.
+Let's see what happens :
+- Provider is a special React Redux component that magically makes the store available to all container components in the application without passing it explicitly. You only need to use it once when you render the root component.
+- store can be seen as a shared location where the whole state of the app between all the components. To do so, component containers should subscribe (connect) to Redux store. One option would be to pass it as a prop to every container component.              
+- Reducers are pure functions that take the previous state and an action, and return the next state (a new state).
 
-It helps you write applications that behave consistently, run in different environments (client, server, and native), and are easy to test. 
-On top of that, it provides a great developer experience, such as live code editing combined with a time traveling debugger.
+Now that we've created our entry point, lets create the app components and defines reducers and action creators. 
 
-You can use Redux together with React, or with any other view library.
+4. App components :
+This app needs : 9 components. This schema explains the connection between them.
 
-To install Redux : 
+We will define a strategy to handle components : We will create a folder for each component in which we will put our style (css) and tests (*.spec.js).
+
+- Let's get started with root Component which is : App
+We want our app to contain a NavigationBar. We can define our Routes in the same component.
+We don't need a whole class to export since the component only renders an element. We can export a simple function : 
 ```
-npm install --save redux
-npm install --save react-redux
-npm install --save-dev redux-devtools
+export default function App() {
+  return (
+    <BrowserRouter>
+      <div className={AppClass.container}>
+        <NavigationBar />
+        <Route exact path="/" component={Dashboard} />
+        <Route exact path="/heroes" component={AllHeroes} />
+      </div>
+    </BrowserRouter>
+  );
+}
 ```
-You don't need to install this, you already have these in your dependencies. 
+- NavigationBar: 
+NavigationBar has two elements that should redirect to Dashboard and AllHeroes components. We will use : NavLink from 'react-router-dom'.
+
+```
+export default function NavigationBar() {
+  return (
+    <div className={NavidationBarClass.navigationBar}>
+      <div className={NavidationBarClass.navigationBarInnerContainer}>
+        <h1>Tour Of Heroes</h1>
+        <nav className={NavidationBarClass.nav}>
+          <NavLink exact to="/" activeClassName={NavidationBarClass.active}>Dashboard</NavLink>
+          <NavLink exact to="/heroes" activeClassName={NavidationBarClass.active}>Heroes</NavLink>
+        </nav>
+      </div>
+    </div>
+  );
+}
+```
+
+When you click on a NavLink, you can change this element's style using 'activeClassName'. 
+
+- Dashboard: 
+This component should display three first heroes on the list (the best heroes). 
+
+The heroes list should be accessible to all components and if a component changes it, the others should be aware of the changes.
+
+We say that heroes list is in the store, and the components using this list should subscribe to the store. 
+
+A part from that, a component has access to the Store via its 'props'. It's what it receives from the external world.
+
+Since the Dashboard is the first element using the list, it should dispatch to the other components. Let's call the dispatch function 'updateHeroesAction'. It's actually an action that tells : This is the list of heroes. 
+
+Actions are payloads of information that send data from your application to your store. They are the only source of information for the store. You send them to the store using store.dispatch().
+
+When an Action is dispatched, Redux calls the associated Reducer to take action. 
+
+```
+//Action : 
+export function updateHeroesAction(heroes) {
+  return {
+    type: 'UPDATE_HEROES',
+    payload: heroes,
+  };
+}
+
+//Reducer : 
+
+export default function heroesReducer(prevState = heroes, action) {
+  if (action.type === 'UPDATE_HEROES') { return action.payload.reverse(); }
+  return prevState;
+}
+```
+All reducers should return the previous state if the action sent is not associated to the current reducer. 
+
+- BestHeroes : 
+This component displays the three first elements of heroes. 
+
+```
+function displayHero(hero) {
+  return <Hero hero={hero} />;
+}
+
+function BestHeroes({ heroes }) {
+  const bestHeroes = [];
+  bestHeroes.push(heroes[0]);
+  bestHeroes.push(heroes[1]);
+  bestHeroes.push(heroes[2]);
+  return (
+    <div>
+      <h3 className={BestHeroesClass.h3}>Best Of Heroes</h3>
+      <div className={BestHeroesClass.container}>
+        {bestHeroes.map(displayHero)}
+      </div>
+    </div>
+  );
+}
+```
+
+- BestHeroesContainer :
+This container subscribes BestHeroes to the store using :
+```
+export default connect(mapStateToProps)(BestHeroes);
+
+function mapStateToProps(currentState) {
+  return {
+    heroes: currentState.heroes,
+  };
+}
+```
+- Hero : 
+This is unit of each list Element. It only displays a Hero name. 
+```
+export default function Hero({ hero }) {
+  return (
+    <h4 className={HeroClass.module} style={{ marginRight: `${1}em` }}>{hero.name}</h4>
+  );
+}
+
+Hero.propTypes = {
+  hero: Proptypes.shape({
+    name: Proptypes.string.isRequired,
+    id: Proptypes.number.isRequired,
+  }).isRequired,
+};
+```
+
+PropTypes defines the elements of an Object and their types and link it to the Current Component. 
+
+Congrats !! You've just finished your first view using React and Redux. Actually, you have completed the circle : 
+
+![alt text](http://www.theodo.fr/uploads/blog//2016/03/ui_workflow.png)
+
