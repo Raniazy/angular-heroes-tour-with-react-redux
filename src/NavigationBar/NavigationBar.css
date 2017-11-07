@@ -1,0 +1,73 @@
+.navigationBar {
+    backface-visibility: hidden;
+    border-bottom: 1px solid #cdcdcd;
+    box-shadow: 1px 0 1px rgba(0, 0, 0, 0.25);
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: #ffffff;
+    height: 46px;
+    display: flex;
+    justify-content: center;
+}
+
+.navigationBarInnerContainer {
+    width: 600px;
+    justify-content: space-between;
+    display: flex;
+}
+
+.navigationBarUl {
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.navigationBarLi {
+    padding: 0;
+    margin: 20px;
+    list-style-type: none;
+    height: 46px;
+    color: #66757f;
+    overflow: hidden;
+}
+
+.navigationBarLink {
+    margin:5px;
+}
+
+.active {
+    background-color: #e1e8ed;
+}
+
+h1 {
+    font-size: 1.2em;
+    color: #999;
+    margin-bottom: 0;
+}
+h2 {
+    font-size: 2em;
+    margin-top: 0;
+    padding-top: 0;
+}
+nav a {
+    padding: 5px 10px;
+    text-decoration: none;
+    margin-top: 10px;
+    display: inline-block;
+    background-color: #eee;
+    border-radius: 4px;
+    margin-right: 4px;
+}
+nav a:visited, a:link {
+    color: #607D8B;
+}
+nav a:hover {
+    color: #039be5;
+    background-color: #CFD8DC;
+}
+nav a.active {
+    color: #039be5;
+}
